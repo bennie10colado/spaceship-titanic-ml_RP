@@ -92,21 +92,6 @@ Isso irá:
 
 ---
 
-## 🛠 **Possíveis Problemas e Soluções**
-
-### ❌ Erro `ModuleNotFoundError`
-Se aparecer **"ModuleNotFoundError"**, certifique-se de que está no ambiente virtual:
-
-```bash
-source venv/bin/activate
-```
-
-### ❌ Erro `FileNotFoundError`
-Se os arquivos `train.csv` e `test.csv` não forem encontrados, **verifique se os arquivos estão na pasta `data/` corretamente**.
-
-Se precisar de ajuda, abra uma *issue*! 🚀
-
----
 
 ## 📜 **Próximos Passos**
 ✅ Implementação de Redes Neurais (próxima fase).  
