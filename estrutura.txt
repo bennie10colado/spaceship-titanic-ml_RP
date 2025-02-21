@@ -1,0 +1,23 @@
+﻿Listagem de caminhos de pasta
+C:.
+│   .gitignore
+│   estrutura.txt
+│   main.py
+│   README.md
+│   requirements.txt
+│   
+├───data
+│       sample_submission.csv
+│       test.csv
+│       train.csv
+│       
+├───src
+│   │   data_loader.py
+│   │   evaluation.py
+│   │   preprocessing.py
+│   │   
+│   └───models
+│           knn_model.py
+│           neural_network.py
+│           
+└───venv
