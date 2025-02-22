@@ -17,3 +17,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    #TODO: podemos fazer umas tabelas com matplotlib posteriormente como a matriz de confusão, e curva roc...
