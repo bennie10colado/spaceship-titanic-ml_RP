@@ -2,18 +2,18 @@ from src.data_loader import load_data
 from src.models.knn_model import preprocess_data, train_knn
 
 def main():
-    # Carregar os dados
+    # carregar os dados
     train_df, test_df = load_data()
 
     if train_df is None:
         print("❌ Erro ao carregar os dados. Encerrando execução.")
         return
 
-    # Pré-processar os dados
+    # pré-processar os dados
     X, y, scaler, label_encoders = preprocess_data(train_df)
 
-    # Treinar e avaliar o modelo k-NN
-    accuracy, knn_model = train_knn(X, y, k=5)
+    # treinar e avaliar o modelo k-NN
+    accuracy, knn_model = train_knn(X, y, k=10 )
 
 if __name__ == "__main__":
     main()
