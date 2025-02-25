@@ -58,7 +58,7 @@ def preprocess_data(df, is_train=True):
 
     return X, y, scaler, label_encoders
 
-def train_knn(X, y, k=5, test_size=0.2):
+def train_knn(X, y, k=20, test_size=0.1):
     """
     Treina e avalia um modelo k-NN com holdout.
 

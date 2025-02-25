@@ -13,7 +13,7 @@ def main():
     X, y, scaler, label_encoders = preprocess_data(train_df)
 
     # treinar e avaliar o modelo k-NN
-    accuracy, knn_model = train_knn(X, y, k=10 )
+    accuracy, knn_model = train_knn(X, y, k=10)
 
 if __name__ == "__main__":
     main()
