@@ -7,7 +7,8 @@ Este repositório contém uma solução para o problema do **Spaceship Titanic**
 Antes de começar, você precisa ter:
 
 - **Windows com WSL (Windows Subsystem for Linux) ativado** (ou rodar diretamente em Linux/Mac)
-- **Python 3.8+** instalado
+- **Python 3.8+** instalado (exceto Python 3.13)
+- **Tensorflow** instalado (instale de acordo com o seu hardware)
 - **Git** instalado
 
 ## 📂 Estrutura do Projeto
@@ -80,7 +81,12 @@ pip install -r requirements.txt
 Com tudo configurado, execute:
 
 ```bash
-python3 main.py
+python3 main.py --model_path "(model path)"
+```
+
+Caso queira treinar o modelo:
+```bash
+python3 main.py --train --model_path "(model path)"
 ```
 
 Isso irá:
