@@ -1,3 +1,4 @@
+from generate_charts import generate_precision_chart
 from src.data_loader import load_data
 from src.models.knn_model import preprocess_data, train_knn
 from src.models.neural_network import train_mlp
@@ -82,6 +83,10 @@ def main():
     # ---------------------------
     overlap = check_interval_overlap(ci_knn, ci_mlp)
     print(f"\nOs intervalos de confiança se sobrepõem? {overlap}")
-
+    
+    # Gerar gráfico comparativo da precisao media dos modelos
+    generate_precision_chart(acc_knn, acc_mlp)
+    
+    
 if __name__ == "__main__":
     main()
