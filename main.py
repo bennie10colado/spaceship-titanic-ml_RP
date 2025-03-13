@@ -1,4 +1,4 @@
-from generate_charts import generate_precision_chart
+from src.generate_charts import generate_precision_chart
 from src.data_loader import load_data
 from src.models.knn_model import preprocess_data, train_knn
 from src.models.neural_network import train_mlp

@@ -37,13 +37,16 @@ def preprocess_data(df, is_train=True):
     df[categorical_cols] = imputer_categorical.fit_transform(df[categorical_cols])
     df[numerical_cols] = imputer_numerical.fit_transform(df[numerical_cols])
 
+    #TODO: adicionar imputação no holdout de treino, com os valores somente da base de treino, e não utilizar dados da validação
     # codificar colunas categóricas
     label_encoders = {}
     for col in categorical_cols:
         le = LabelEncoder()
         df[col] = le.fit_transform(df[col])
         label_encoders[col] = le
-
+    #TODO: ver exatamente quantas possibilidades de labeled enconding temos nos atributos categoricos
+    #TODO: ver extamente os valores das cabines, ver como se comportam os valores, e como as caracteristicas estão presentes nos dados antes de enviar para a mlp, e no knn. Printar as colunas, e os dados
+    #TODO: COLOCAR NO RELATÒRIO COMO TRATOU CADA COLUNA
     # separando features e target
     if is_train:
         X = df.drop("Transported", axis=1)
@@ -75,7 +78,8 @@ def train_knn(X, y, k=20, test_size=0.1):
     # divisão holdout
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=test_size, random_state=42, stratify=y)
 
-    # treinar o modelo k-NN
+    #TODO: adicionar o preprocessamento do treino, de valores invalidos/null com media/moda 
+    # TODO: treinar o modelo k-NN, somente com os dados da base de treino
     model = KNeighborsClassifier(n_neighbors=k)
     model.fit(X_train, y_train)
 
