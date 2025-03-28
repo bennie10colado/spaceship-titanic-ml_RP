@@ -20,7 +20,7 @@ def create_model(num_features):
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     return model
 
-def train_mlp(X, y, args, test_size=0.1):
+def train_mlp(X_train, y_train, X_val, y_val, args):
     """
     Treina e avalia um modelo MLP.
 
@@ -34,7 +34,7 @@ def train_mlp(X, y, args, test_size=0.1):
         model (MLP): Modelo treinado.
     """
     # divisão holdout
-    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=test_size, random_state=27, stratify=y)
+    #X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=test_size, random_state=27, stratify=y)
 
 
     if args.train:
