@@ -44,7 +44,19 @@ def preprocess_data(df, test_size=0.1):
     val_df[categorical_cols] = imputer_categorical.transform(val_df[categorical_cols])
     val_df[numerical_cols] = imputer_numerical.transform(val_df[numerical_cols])
 
-    # codificar colunas categóricas
+
+    # exibir informações detalhadas das colunas categóricas para o relatório
+    for col in categorical_cols:
+        unique_vals = train_df[col].unique()
+        print(f"Coluna '{col}' - Número de categorias: {len(unique_vals)} - Valores: {unique_vals}")
+        if col.lower() == "cabin":
+            sorted_vals = np.sort(unique_vals)
+            print(f"Valores ordenados da coluna 'Cabin': {sorted_vals}")
+    
+    print("Resumo do tratamento das colunas: valores ausentes foram imputados e codificação OneHot aplicada nas colunas categóricas.")
+    
+    
+    # codificar colunas categóricas c OneHotEncoder 
     
     ohe = OneHotEncoder(handle_unknown='ignore',sparse_output=False)
     train_cat = ohe.fit_transform(train_df[categorical_cols])
@@ -71,8 +83,9 @@ def preprocess_data(df, test_size=0.1):
     #TODO: ver exatamente quantas possibilidades de labeled enconding temos nos atributos categoricos
     #TODO: ver extamente os valores das cabines, ver como se comportam os valores, e como as caracteristicas estão presentes nos dados antes de enviar para a mlp, e no knn. Printar as colunas, e os dados
     #TODO: COLOCAR NO RELATÒRIO COMO TRATOU CADA COLUNA
-    # separando features e target
     
+    
+    # separando features e target
     X_train = train_df.drop("Transported", axis=1)
     y_train = train_df["Transported"]
     X_val = val_df.drop("Transported", axis=1)
@@ -99,6 +112,13 @@ def train_knn(X_train, y_train, X_val, y_val, k=20):
         accuracy (float): Acurácia do modelo.
         model (KNeighborsClassifier): Modelo treinado.
     """
+    
+    # verificar e imputar valores faltantes, se existirem (apenas como precaução)
+    if np.isnan(X_train).any():
+        print("Encontrados valores faltantes em X_train. Aplicando imputação com média.")
+        from sklearn.impute import SimpleImputer
+        imputer = SimpleImputer(strategy='mean')
+        X_train = imputer.fit_transform(X_train)
 
     #TODO: adicionar o preprocessamento do treino, de valores invalidos/null com media/moda 
     # TODO: treinar o modelo k-NN, somente com os dados da base de treino

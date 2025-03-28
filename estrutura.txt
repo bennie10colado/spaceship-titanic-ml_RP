@@ -14,10 +14,25 @@ C:.
 ├───src
 │   │   data_loader.py
 │   │   evaluation.py
+│   │   generate_charts.py
 │   │   preprocessing.py
 │   │   
-│   └───models
-│           knn_model.py
-│           neural_network.py
+│   ├───charts
+│   │       precision_comparison.png
+│   │       
+│   ├───models
+│   │   │   knn_model.py
+│   │   │   manual_knn_model.py
+│   │   │   neural_network.py
+│   │   │   
+│   │   └───__pycache__
+│   │           knn_model.cpython-310.pyc
+│   │           manual_knn_model.cpython-310.pyc
+│   │           neural_network.cpython-310.pyc
+│   │           
+│   └───__pycache__
+│           data_loader.cpython-310.pyc
+│           evaluation.cpython-310.pyc
+│           generate_charts.cpython-310.pyc
 │           
-└───venv
+├───venv
