@@ -9,6 +9,38 @@ import os
 from src.data_loader import load_data
 from sklearn.preprocessing import OneHotEncoder
 
+
+def process_cabin(df):
+    """
+    Processa a coluna 'Cabin' separando-a em 'Deck', 'CabinNum' e 'Side'.
+    Caso haja múltiplas cabines, usa a primeira.
+    Converte 'CabinNum' para numérico (se possível) e trata valores inválidos.
+    """
+    if "Cabin" in df.columns:
+        def split_cabin(cabin):
+            if isinstance(cabin, str):
+                # Caso haja múltiplas cabines, pega a primeira
+                cabin = cabin.split()[0]
+                parts = cabin.split('/')
+                if len(parts) == 3:
+                    deck = parts[0]
+                    # Tenta converter o número; se falhar, retorna np.nan
+                    try:
+                        cabin_num = int(parts[1])
+                    except:
+                        cabin_num = np.nan
+                    side = parts[2]
+                    return pd.Series({'Deck': deck, 'CabinNum': cabin_num, 'Side': side})
+                else:
+                    # Se o formato não for o esperado, retorna valores padrão
+                    return pd.Series({'Deck': cabin, 'CabinNum': np.nan, 'Side': np.nan})
+            else:
+                return pd.Series({'Deck': np.nan, 'CabinNum': np.nan, 'Side': np.nan})
+        cabin_features = df['Cabin'].apply(split_cabin)
+        df = pd.concat([df.drop(columns=['Cabin']), cabin_features], axis=1)
+    return df
+
+
 def preprocess_data(df, test_size=0.1):
     """
     Aplica pré-processamento dos dados ao dataset.
@@ -55,6 +87,12 @@ def preprocess_data(df, test_size=0.1):
     
     print("Resumo do tratamento das colunas: valores ausentes foram imputados e codificação OneHot aplicada nas colunas categóricas.")
     
+    train_df = process_cabin(train_df)
+    val_df = process_cabin(val_df)
+    
+    
+    categorical_cols = train_df.select_dtypes(include=["object"]).columns
+    numerical_cols = train_df.select_dtypes(include=["int64", "float64"]).columns
     
     # codificar colunas categóricas c OneHotEncoder 
     
