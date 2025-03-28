@@ -26,10 +26,21 @@ def preprocess_data(df, test_size=0.1):
     # remover as colunas irrelevantes
     df.drop(["PassengerId", "Name"], axis=1, inplace=True, errors="ignore")
     
-    train_df, val_df = train_test_split(df, test_size=test_size, random_state=42, stratify=df["Transported"])
+    train_df, val_df = train_test_split(df, test_size=test_size, random_state=27, stratify=df["Transported"])
+
+    # separar e processar a coluna Cabin
+    def split_cabin(df):
+        df['Deck'] = df['Cabin'].str.split('/').str[0]
+        df['Num'] = df['Cabin'].str.split('/').str[1]
+        df['Side'] = df['Cabin'].str.split('/').str[2]
+        df.drop('Cabin', axis=1, inplace=True)
+        return df
+
+    train_df = split_cabin(train_df.copy())
+    val_df = split_cabin(val_df.copy())
 
     # separar colunas categoricas e numericas
-    categorical_cols = train_df.select_dtypes(include=["object"]).columns
+    categorical_cols = ['HomePlanet', 'Destination', 'Deck', 'Side']
     numerical_cols = train_df.select_dtypes(include=["int64", "float64"]).columns
 
     # criar imputadores para valores ausentes
@@ -58,13 +69,18 @@ def preprocess_data(df, test_size=0.1):
     
     # codificar colunas categóricas c OneHotEncoder 
     
+    ohe_cols = ['HomePlanet', 'Destination', 'Deck']
     ohe = OneHotEncoder(handle_unknown='ignore',sparse_output=False)
-    train_cat = ohe.fit_transform(train_df[categorical_cols])
-    val_cat = ohe.transform(val_df[categorical_cols])
+    train_cat = ohe.fit_transform(train_df[ohe_cols])
+    val_cat = ohe.transform(val_df[ohe_cols])
     
     # Converter os arrays resultantes para DataFrame com nomes das colunas certo
-    train_cat_df = pd.DataFrame(train_cat, index=train_df.index, columns=ohe.get_feature_names_out(categorical_cols))
-    val_cat_df = pd.DataFrame(val_cat, index=val_df.index, columns=ohe.get_feature_names_out(categorical_cols))
+    train_cat_df = pd.DataFrame(train_cat, index=train_df.index, columns=ohe.get_feature_names_out(ohe_cols))
+    val_cat_df = pd.DataFrame(val_cat, index=val_df.index, columns=ohe.get_feature_names_out(ohe_cols))
+
+    # Tratar 'Side' separadamente com codificação binária (P=0, S=1)
+    train_df['Side'] = train_df['Side'].map({'P': 0, 'S': 1})
+    val_df['Side'] = val_df['Side'].map({'P': 0, 'S': 1})
 
     # Remover as colunas originais e concatenar os dados codificados
     train_df = train_df.drop(columns=categorical_cols)
@@ -95,6 +111,12 @@ def preprocess_data(df, test_size=0.1):
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_val = scaler.transform(X_val)
+    
+    print("Resumo do tratamento:")
+    print("- 'HomePlanet', 'Destination', 'Deck': One-Hot Encoding aplicado.")
+    print("- 'Cabin': Dividida em 'Deck' (One-Hot), 'Num' (numérico), 'Side' (binário: P=0, S=1).")
+    print("- Valores ausentes: Moda para categóricas, mediana para numéricas.")
+    print("- Normalização: StandardScaler aplicado nas features.")
 
     return X_train, y_train, X_val, y_val, scaler, ohe
 
