@@ -30,19 +30,19 @@ def main():
         return
 
     # Pré-processar os dados
-    X, y, scaler, label_encoders = preprocess_data(train_df)
+    X_train, y_train, X_val, y_val, scaler, ohe = preprocess_data(train_df)
 
     # Treinar e avaliar o modelo k-NN (holdout simples)
-    accuracy_knn, knn_model = train_knn(X, y, k=10)
+    accuracy_knn, knn_model = train_knn(X_train, y_train, X_val, y_val, k=10)
     # Treinar e avaliar o modelo MLP (holdout simples)
-    accuracy_mlp, mlp_model = train_mlp(X, y, args)
+    accuracy_mlp, mlp_model = train_mlp(X_train, y_train, X_val, y_val,args)
 
     # ---------------------------
     # Avaliação Repetida (Holdout Aleatório Repetido)
     # ---------------------------
     n_repeats = 30
-    acc_knn = repeated_holdout(evaluate_knn_split, X, y, n_repeats=n_repeats, test_size=0.3, random_state=42, k=10)
-    acc_mlp = repeated_holdout(evaluate_mlp_split, X, y, n_repeats=n_repeats, test_size=0.3,
+    acc_knn = repeated_holdout(evaluate_knn_split, X_train, y_train, n_repeats=n_repeats, test_size=0.3, random_state=42, k=10)
+    acc_mlp = repeated_holdout(evaluate_mlp_split, X_train, y_train, n_repeats=n_repeats, test_size=0.3,
                                  random_state=27, batch_size=args.batch_size, epochs=args.epochs)
 
     print(f"\nResultados do Holdout Aleatório Repetido (n={n_repeats}):")
@@ -52,8 +52,8 @@ def main():
     # ---------------------------
     # 10x Holdout 50/50
     # ---------------------------
-    acc_knn_10x = holdout_10x_50_50(evaluate_knn_split, X, y, n_repeats=10, random_state=42, k=10)
-    acc_mlp_10x = holdout_10x_50_50(evaluate_mlp_split, X, y, n_repeats=10, random_state=27,
+    acc_knn_10x = holdout_10x_50_50(evaluate_knn_split, X_train, y_train, n_repeats=10, random_state=42, k=10)
+    acc_mlp_10x = holdout_10x_50_50(evaluate_mlp_split, X_train, y_train, n_repeats=10, random_state=27,
                                     batch_size=args.batch_size, epochs=args.epochs)
 
     print(f"\nResultados do 10x Holdout 50/50:")
